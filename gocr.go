@@ -136,14 +136,14 @@ func ocr(c echo.Context) error {
 				if im.Empty() {
 					u.Message = "Failed (Path)"
 				} else {
-					gray := gocv.NewMat()
-					gocv.CvtColor(im, &gray, gocv.ColorBGRToGray)
-					blur := gocv.NewMat()
-					gocv.BilateralFilter(gray, &blur, 13, 15, 15)
-					scale := gocv.NewMat()
-					gocv.ConvertScaleAbs(blur, &scale, 1.5, 25)
+					// gray := gocv.NewMat()
+					// gocv.CvtColor(im, &gray, gocv.ColorBGRToGray)
+					// blur := gocv.NewMat()
+					// gocv.BilateralFilter(gray, &blur, 13, 15, 15)
+					// scale := gocv.NewMat()
+					// gocv.ConvertScaleAbs(blur, &scale, 1.5, 25)
 
-					gocv.IMWrite(fn, scale)
+					// gocv.IMWrite(fn, scale)
 
 					client := gosseract.NewClient()
 					client.SetImage(fn)
