@@ -4,12 +4,14 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/otiai10/gosseract"
 	"github.com/thanhpk/randstr"
+	"gocv.io/x/gocv"
 )
 
 func main() {
@@ -129,32 +131,32 @@ func ocr(c echo.Context) error {
 				// u.Message = "Failed" + err.Error()
 				// }
 
-				// path := filepath.Join(fn)
-				// im := gocv.IMRead(path, gocv.IMReadColor)
-				// if im.Empty() {
-				// u.Message = "Failed (Path)"
-				// } else {
-				// gray := gocv.NewMat()
-				// gocv.CvtColor(im, &gray, gocv.ColorBGRToGray)
-				// blur := gocv.NewMat()
-				// gocv.BilateralFilter(gray, &blur, 13, 15, 15)
-				// scale := gocv.NewMat()
-				// gocv.ConvertScaleAbs(blur, &scale, 1.5, 25)
-
-				// gocv.IMWrite(fn, scale)
-
-				client := gosseract.NewClient()
-				client.SetImage(fn)
-				text, textErr := client.Text()
-				defer client.Close()
-
-				if textErr != nil {
-					u.Message = "Failed (Text)"
-					println(textErr.Error())
+				path := filepath.Join(fn)
+				im := gocv.IMRead(path, gocv.IMReadColor)
+				if im.Empty() {
+					u.Message = "Failed (Path)"
 				} else {
-					u.Data = text
+					// gray := gocv.NewMat()
+					// gocv.CvtColor(im, &gray, gocv.ColorBGRToGray)
+					// blur := gocv.NewMat()
+					// gocv.BilateralFilter(gray, &blur, 13, 15, 15)
+					// scale := gocv.NewMat()
+					// gocv.ConvertScaleAbs(blur, &scale, 1.5, 25)
+
+					// gocv.IMWrite(fn, scale)
+
+					client := gosseract.NewClient()
+					client.SetImage(fn)
+					text, textErr := client.Text()
+					defer client.Close()
+
+					if textErr != nil {
+						u.Message = "Failed (Text)"
+						println(textErr.Error())
+					} else {
+						u.Data = text
+					}
 				}
-				// }
 			}
 		} else {
 			os.Remove(fn)
